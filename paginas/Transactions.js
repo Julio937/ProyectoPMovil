@@ -12,7 +12,7 @@ export default function TransactionsPage() {
           <Ionicons name='person-circle-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.transactionsList}>
+      <ScrollView contentContainerStyle={styles.transactionsList}>
         {/* Aquí puedes agregar componentes para mostrar la lista de transacciones */}
         <View style={styles.transactionItem}>
           <View style={styles.transactionLeft}>
@@ -32,7 +32,15 @@ export default function TransactionsPage() {
             <Text style={styles.transactionAmount}>+$300.00</Text>
           </View>
         </View>
-        {/* Puedes agregar más elementos de transacción según sea necesario */}
+        <View style={styles.transactionItem}>
+          <View style={styles.transactionLeft}>
+            <Text style={styles.transactionTitle}>Venta de acciones</Text>
+            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
+          </View>
+          <View style={styles.transactionRight}>
+            <Text style={styles.transactionAmount}>+$300.00</Text>
+          </View>
+        </View>
       </ScrollView>
       <View style={styles.bottomMenu}>
         <TouchableOpacity style={styles.menuItem}>
@@ -76,7 +84,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   transactionsList: {
-    flex: 1,
     paddingHorizontal: 20,
   },
   transactionItem: {

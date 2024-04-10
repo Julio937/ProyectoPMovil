@@ -13,7 +13,6 @@ export default function SettingsPage() {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.settingsList}>
-        {/* Aquí puedes agregar componentes para configuración */}
         <TouchableOpacity style={styles.settingItem}>
           <Text style={styles.settingText}>Notificaciones</Text>
           <Ionicons name='notifications-outline' size={24} color='#F0B90B' />
@@ -26,7 +25,6 @@ export default function SettingsPage() {
           <Text style={styles.settingText}>Tema</Text>
           <Ionicons name='color-palette-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
-        {/* Puedes agregar más elementos de configuración según sea necesario */}
       </ScrollView>
       <View style={styles.bottomMenu}>
         <TouchableOpacity style={styles.menuItem}>

@@ -9,13 +9,11 @@ export default function App() {
       <View style={styles.marketOverview}>
         <View style={styles.marketOverviewBox}>
           <Text style={styles.marketOverviewText}>Estado actual del mercado</Text>
-          {/* Aquí puedes agregar componentes para mostrar el estado del mercado */}
         </View>
       </View>
       <View style={styles.walletInfo}>
         <View style={styles.walletInfoBox}>
           <Text style={styles.walletInfoText}>Billetera del usuario</Text>
-          {/* Aquí puedes agregar componentes para mostrar información de la billetera */}
         </View>
       </View>
       <View style={styles.bottomMenu}>

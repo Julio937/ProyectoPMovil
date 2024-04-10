@@ -13,7 +13,6 @@ export default function WalletPage() {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.walletContent}>
-        {/* Aquí puedes agregar componentes para mostrar la información de la billetera */}
         <View style={styles.walletCard}>
           <Text style={styles.walletCardTitle}>Saldo disponible</Text>
           <Text style={styles.walletCardAmount}>$1,000.00</Text>
@@ -22,7 +21,6 @@ export default function WalletPage() {
           <Text style={styles.walletCardTitle}>Ganancias totales</Text>
           <Text style={styles.walletCardAmount}>$500.00</Text>
         </View>
-        {/* Puedes agregar más tarjetas para mostrar información adicional de la billetera */}
       </ScrollView>
       <View style={styles.bottomMenu}>
         <TouchableOpacity style={styles.menuItem}>
