@@ -1,40 +1,78 @@
-import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <View style={styles.marketOverview}>
-        <View style={styles.marketOverviewBox}>
-          <Text style={styles.marketOverviewText}>Estado actual del mercado</Text>
-        </View>
+      <Text style={styles.logo}>Acciones & Gestión</Text>
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.inputText}
+          placeholder='Correo electrónico'
+          placeholderTextColor='#B0B0B0'
+          keyboardType='email-address'
+          autoCapitalize='none'
+          autoCorrect={false}
+        />
       </View>
-      <View style={styles.walletInfo}>
-        <View style={styles.walletInfoBox}>
-          <Text style={styles.walletInfoText}>Billetera del usuario</Text>
-        </View>
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.inputText}
+          placeholder='Contraseña'
+          placeholderTextColor='#B0B0B0'
+          secureTextEntry={true}
+          autoCapitalize='none'
+          autoCorrect={false}
+        />
       </View>
-      <View style={styles.bottomMenu}>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='pie-chart-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Resumen</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='wallet-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Billetera</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='list-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Transacciones</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='settings-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Configuración</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.loginBtn}>
+        <Text style={styles.loginText}>Iniciar Sesión</Text>
+      </TouchableOpacity>
       <StatusBar style='auto' />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#141414',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    fontWeight: 'bold',
+    fontSize: 40,
+    color: '#F0B90B',
+    marginBottom: 50,
+  },
+  inputView: {
+    width: '80%',
+    backgroundColor: '#333',
+    borderRadius: 10,
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  inputText: {
+    height: 50,
+    color: 'white',
+  },
+  loginBtn: {
+    width: '80%',
+    backgroundColor: '#F0B90B',
+    borderRadius: 10,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    marginBottom: 10,
+  },
+  loginText: {
+    color: '#141414',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});

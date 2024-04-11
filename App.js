@@ -1,106 +1,34 @@
-import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-export default function TransactionsPage() {
+export default function App() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Transacciones</Text>
-        <TouchableOpacity style={styles.profileButton}>
-          <Ionicons name='person-circle-outline' size={24} color='#F0B90B' />
-        </TouchableOpacity>
+      <Text style={styles.logo}>Acciones & Gestión</Text>
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.inputText}
+          placeholder='Correo electrónico'
+          placeholderTextColor='#B0B0B0'
+          keyboardType='email-address'
+          autoCapitalize='none'
+          autoCorrect={false}
+        />
       </View>
-      <ScrollView contentContainerStyle={styles.transactionsList}>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Compra de acciones</Text>
-            <Text style={styles.transactionDate}>10 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
-          </View>
-        </View>
-
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
-          </View>
-        </View>
-      </ScrollView>
-      <View style={styles.bottomMenu}>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='pie-chart-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Resumen</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='wallet-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Billetera</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='settings-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Configuración</Text>
-        </TouchableOpacity>
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.inputText}
+          placeholder='Contraseña'
+          placeholderTextColor='#B0B0B0'
+          secureTextEntry={true}
+          autoCapitalize='none'
+          autoCorrect={false}
+        />
       </View>
+      <TouchableOpacity style={styles.loginBtn}>
+        <Text style={styles.loginText}>Iniciar Sesión</Text>
+      </TouchableOpacity>
       <StatusBar style='auto' />
     </View>
   );
@@ -110,72 +38,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#141414',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 40,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-  },
-  headerText: {
-    color: '#F0B90B',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  profileButton: {
+    alignItems: 'center',
     justifyContent: 'center',
   },
-  transactionsList: {
-    paddingHorizontal: 20,
+  logo: {
+    fontWeight: 'bold',
+    fontSize: 40,
+    color: '#F0B90B',
+    marginBottom: 50,
   },
-  transactionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  inputView: {
+    width: '80%',
     backgroundColor: '#333',
     borderRadius: 10,
-    padding: 20,
+    height: 50,
     marginBottom: 20,
+    justifyContent: 'center',
+    padding: 20,
   },
-  transactionLeft: {
-    flex: 1,
-  },
-  transactionRight: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  transactionTitle: {
-    color: '#F0B90B',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  transactionDate: {
-    color: '#B0B0B0',
-    fontSize: 14,
-  },
-  transactionAmount: {
+  inputText: {
+    height: 50,
     color: 'white',
-    fontSize: 18,
+  },
+  loginBtn: {
+    width: '80%',
+    backgroundColor: '#F0B90B',
+    borderRadius: 10,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    marginBottom: 10,
+  },
+  loginText: {
+    color: '#141414',
+    fontSize: 20,
     fontWeight: 'bold',
-  },
-  bottomMenu: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-    paddingTop: 20,
-    paddingBottom: 20,
-  },
-  menuItem: {
-    alignItems: 'center',
-  },
-  menuItemText: {
-    color: 'white',
-    fontSize: 16,
-    marginTop: 5,
   },
 });
