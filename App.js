@@ -1,34 +1,31 @@
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.logo}>Acciones & Gestión</Text>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Correo electrónico'
-          placeholderTextColor='#B0B0B0'
-          keyboardType='email-address'
-          autoCapitalize='none'
-          autoCorrect={false}
-        />
+      <View style={styles.marketOverview}>
+        <Text style={styles.marketOverviewText}>Estado actual del mercado</Text>
       </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Contraseña'
-          placeholderTextColor='#B0B0B0'
-          secureTextEntry={true}
-          autoCapitalize='none'
-          autoCorrect={false}
-        />
+      <View style={styles.walletInfo}>
+        <Text style={styles.walletInfoText}>Balance de la cuenta</Text>
       </View>
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>Iniciar Sesión</Text>
-      </TouchableOpacity>
+      <View style={styles.bottomMenu}>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name='wallet-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Balance</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name='list-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Transacciones</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name='settings-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Configuración</Text>
+        </TouchableOpacity>
+      </View>
       <StatusBar style='auto' />
     </View>
   );
@@ -41,38 +38,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logo: {
-    fontWeight: 'bold',
-    fontSize: 40,
+  marketOverview: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  marketOverviewText: {
     color: '#F0B90B',
-    marginBottom: 50,
+    fontSize: 24,
+    textAlign: 'center',
   },
-  inputView: {
-    width: '80%',
-    backgroundColor: '#333',
-    borderRadius: 10,
-    height: 50,
-    marginBottom: 20,
+  walletInfo: {
+    flex: 1,
     justifyContent: 'center',
-    padding: 20,
   },
-  inputText: {
-    height: 50,
-    color: 'white',
+  walletInfoText: {
+    color: '#F0B90B',
+    fontSize: 24,
+    textAlign: 'center',
   },
-  loginBtn: {
-    width: '80%',
-    backgroundColor: '#F0B90B',
-    borderRadius: 10,
-    height: 50,
+  bottomMenu: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 40,
-    marginBottom: 10,
+    paddingBottom: 20,
+    width: '100%',
   },
-  loginText: {
-    color: '#141414',
-    fontSize: 20,
-    fontWeight: 'bold',
+  menuItem: {
+    alignItems: 'center',
+  },
+  menuItemText: {
+    color: 'white',
+    fontSize: 16,
+    marginTop: 5,
   },
 });

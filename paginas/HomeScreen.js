@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -5,24 +6,30 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.logo}>Acciones & Gestión</Text>
-        <TouchableOpacity style={styles.profileButton}>
-          <Text style={styles.profileButtonText}>Perfil</Text>
-        </TouchableOpacity>
+      <View style={styles.marketOverview}>
+        <Text style={styles.marketOverviewText}>Estado actual del mercado</Text>
+        {/* Aquí puedes agregar componentes para mostrar el estado del mercado */}
       </View>
-      <View style={styles.content}>
-        <TouchableOpacity style={styles.card}>
-          <Text style={styles.cardTitle}>Mis Acciones</Text>
-          <Text style={styles.cardText}>Ver las acciones que opero</Text>
+      <View style={styles.walletInfo}>
+        <Text style={styles.walletInfoText}>Billetera del usuario</Text>
+        {/* Aquí puedes agregar componentes para mostrar información de la billetera */}
+      </View>
+      <View style={styles.bottomMenu}>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name='pie-chart-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Resumen</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
-          <Text style={styles.cardTitle}>Gestoras Activas</Text>
-          <Text style={styles.cardText}>Explorar gestoras de activos</Text>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name='wallet-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Billetera</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
-          <Text style={styles.cardTitle}>Consultas</Text>
-          <Text style={styles.cardText}>Acceder a servicios de consultas</Text>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name='list-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Transacciones</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name='settings-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Configuración</Text>
         </TouchableOpacity>
       </View>
       <StatusBar style='auto' />
@@ -35,50 +42,39 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#141414',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingTop: 50,
+    justifyContent: 'center',
   },
-  header: {
-    width: '100%',
+  marketOverview: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  marketOverviewText: {
+    color: '#F0B90B',
+    fontSize: 24,
+    textAlign: 'center',
+  },
+  walletInfo: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  walletInfoText: {
+    color: '#F0B90B',
+    fontSize: 24,
+    textAlign: 'center',
+  },
+  bottomMenu: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  logo: {
-    fontWeight: 'bold',
-    fontSize: 30,
-    color: '#F0B90B',
-  },
-  profileButton: {
-    backgroundColor: '#F0B90B',
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    borderRadius: 10,
-  },
-  profileButtonText: {
-    color: '#141414',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  content: {
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: 20,
     width: '100%',
-    paddingHorizontal: 20,
   },
-  card: {
-    backgroundColor: '#333',
-    borderRadius: 10,
-    padding: 20,
-    marginBottom: 20,
+  menuItem: {
+    alignItems: 'center',
   },
-  cardTitle: {
-    color: '#F0B90B',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  cardText: {
-    color: '#fff',
+  menuItemText: {
+    color: 'white',
     fontSize: 16,
+    marginTop: 5,
   },
 });

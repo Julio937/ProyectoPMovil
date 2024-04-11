@@ -7,7 +7,7 @@ export default function WalletPage() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Billetera</Text>
+        <Text style={styles.headerText}>Balance</Text>
         <TouchableOpacity style={styles.profileButton}>
           <Ionicons name='person-circle-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
@@ -15,11 +15,11 @@ export default function WalletPage() {
       <ScrollView style={styles.walletContent}>
         <View style={styles.walletCard}>
           <Text style={styles.walletCardTitle}>Saldo disponible</Text>
-          <Text style={styles.walletCardAmount}>$1,000.00</Text>
+          <Text style={styles.walletCardAmount}>$1,000.000.00</Text>
         </View>
         <View style={styles.walletCard}>
           <Text style={styles.walletCardTitle}>Ganancias totales</Text>
-          <Text style={styles.walletCardAmount}>$500.00</Text>
+          <Text style={styles.walletCardAmount}>$500.000.00</Text>
         </View>
       </ScrollView>
       <View style={styles.bottomMenu}>

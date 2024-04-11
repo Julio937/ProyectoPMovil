@@ -13,32 +13,85 @@ export default function TransactionsPage() {
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.transactionsList}>
-        {/* Aquí puedes agregar componentes para mostrar la lista de transacciones */}
         <View style={styles.transactionItem}>
           <View style={styles.transactionLeft}>
             <Text style={styles.transactionTitle}>Compra de acciones</Text>
             <Text style={styles.transactionDate}>10 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.00</Text>
+            <Text style={styles.transactionAmount}>-$500.000.00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
           <View style={styles.transactionLeft}>
             <Text style={styles.transactionTitle}>Venta de acciones</Text>
+            <Text style={styles.transactionDate}>1 de abril, 2024</Text>
+          </View>
+          <View style={styles.transactionRight}>
+            <Text style={styles.transactionAmount}>+$300.000.00</Text>
+          </View>
+        </View>
+        <View style={styles.transactionItem}>
+          <View style={styles.transactionLeft}>
+            <Text style={styles.transactionTitle}>Compra de acciones</Text>
+            <Text style={styles.transactionDate}>4 de abril, 2024</Text>
+          </View>
+          <View style={styles.transactionRight}>
+            <Text style={styles.transactionAmount}>-$300.000.00</Text>
+          </View>
+        </View>
+        <View style={styles.transactionItem}>
+          <View style={styles.transactionLeft}>
+            <Text style={styles.transactionTitle}>Compra de acciones</Text>
+            <Text style={styles.transactionDate}>3 de abril, 2024</Text>
+          </View>
+          <View style={styles.transactionRight}>
+            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+          </View>
+        </View>
+        <View style={styles.transactionItem}>
+          <View style={styles.transactionLeft}>
+            <Text style={styles.transactionTitle}>Compra de acciones</Text>
+            <Text style={styles.transactionDate}>2 de abril, 2024</Text>
+          </View>
+          <View style={styles.transactionRight}>
+            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+          </View>
+        </View>
+        <View style={styles.transactionItem}>
+          <View style={styles.transactionLeft}>
+            <Text style={styles.transactionTitle}>Compra de acciones</Text>
             <Text style={styles.transactionDate}>8 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
+            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+          </View>
+        </View>
+        <View style={styles.transactionItem}>
+          <View style={styles.transactionLeft}>
+            <Text style={styles.transactionTitle}>Compra de acciones</Text>
+            <Text style={styles.transactionDate}>10 de abril, 2024</Text>
+          </View>
+          <View style={styles.transactionRight}>
+            <Text style={styles.transactionAmount}>-$500.000.00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
           <View style={styles.transactionLeft}>
             <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
+            <Text style={styles.transactionDate}>12 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.00</Text>
+            <Text style={styles.transactionAmount}>+$500.000.00</Text>
+          </View>
+        </View>
+        <View style={styles.transactionItem}>
+          <View style={styles.transactionLeft}>
+            <Text style={styles.transactionTitle}>Venta de acciones</Text>
+            <Text style={styles.transactionDate}>18 de abril, 2024</Text>
+          </View>
+          <View style={styles.transactionRight}>
+            <Text style={styles.transactionAmount}>-$500.000.00</Text>
           </View>
         </View>
       </ScrollView>
@@ -49,7 +102,7 @@ export default function TransactionsPage() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='wallet-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Billetera</Text>
+          <Text style={styles.menuItemText}>Balance</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='settings-outline' size={24} color='white' />

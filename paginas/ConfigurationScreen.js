@@ -33,7 +33,7 @@ export default function SettingsPage() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='wallet-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Billetera</Text>
+          <Text style={styles.menuItemText}>Balance</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='list-outline' size={24} color='white' />
