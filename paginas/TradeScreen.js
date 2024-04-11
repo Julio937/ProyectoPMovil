@@ -7,7 +7,6 @@ export default function OperarPage() {
   const [selectedAction, setSelectedAction] = React.useState('');
   const [quantity, setQuantity] = React.useState('');
   const [price, setPrice] = React.useState('');
-  const [isFormValid, setIsFormValid] = React.useState(false);
 
   const handleOperate = () => {
     if (selectedAction && quantity && price) {
@@ -16,14 +15,6 @@ export default function OperarPage() {
       Alert.alert('Por favor, complete todos los campos.');
     }
   };
-
-  React.useEffect(() => {
-    if (selectedAction && quantity) {
-      setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
-    }
-  }, [selectedAction, quantity, price]);
 
   return (
     <View style={styles.container}>
@@ -92,10 +83,7 @@ export default function OperarPage() {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity
-        style={[styles.operarButton, { backgroundColor: isFormValid ? '#F0B90B' : 'gray' }]}
-        onPress={handleOperate}
-      >
+      <TouchableOpacity style={styles.operarButton} onPress={handleOperate}>
         <Text style={styles.operarButtonText}>Confirmar</Text>
       </TouchableOpacity>
       <View style={styles.bottomMenu}>
@@ -109,7 +97,7 @@ export default function OperarPage() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='list-outline' size={24} color='white' />
-          <Text style={[styles.menuItemText, styles.transactionsText]}>Transacciones</Text>
+          <Text style={styles.menuItemText}>Transacciones</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='settings-outline' size={24} color='white' />
@@ -232,8 +220,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     marginTop: 5,
-  },
-  transactionsText: {
-    fontWeight: 'bold',
   },
 });
