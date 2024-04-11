@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -15,17 +15,21 @@ export default function WalletPage() {
       <ScrollView style={styles.walletContent}>
         <View style={styles.walletCard}>
           <Text style={styles.walletCardTitle}>Saldo disponible</Text>
-          <Text style={styles.walletCardAmount}>$1,000.000.00</Text>
+          <Text style={styles.walletCardAmount}>$1'000.000,00</Text>
         </View>
         <View style={styles.walletCard}>
           <Text style={styles.walletCardTitle}>Ganancias totales</Text>
-          <Text style={styles.walletCardAmount}>$500.000.00</Text>
+          <Text style={styles.walletCardAmount}>$500.000,00</Text>
         </View>
       </ScrollView>
       <View style={styles.bottomMenu}>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='pie-chart-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Resumen</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Entypo name='line-graph' size={24} color='white' />
+          <Text style={styles.menuItemText}>Operar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='list-outline' size={24} color='white' />
@@ -65,6 +69,7 @@ const styles = StyleSheet.create({
   },
   walletContent: {
     flex: 1,
+    marginTop: 20,
     paddingHorizontal: 20,
   },
   walletCard: {

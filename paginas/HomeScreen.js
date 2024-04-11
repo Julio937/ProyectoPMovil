@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -8,20 +8,19 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.marketOverview}>
         <Text style={styles.marketOverviewText}>Estado actual del mercado</Text>
-        {/* Aquí puedes agregar componentes para mostrar el estado del mercado */}
       </View>
+
       <View style={styles.walletInfo}>
-        <Text style={styles.walletInfoText}>Billetera del usuario</Text>
-        {/* Aquí puedes agregar componentes para mostrar información de la billetera */}
+        <Text style={styles.walletInfoText}>Balance de la cuenta</Text>
       </View>
       <View style={styles.bottomMenu}>
         <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='pie-chart-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Resumen</Text>
+          <Ionicons name='wallet-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Balance</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name='wallet-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Billetera</Text>
+          <Entypo name='line-graph' size={24} color='white' />
+          <Text style={styles.menuItemText}>Operar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='list-outline' size={24} color='white' />

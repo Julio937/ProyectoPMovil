@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -30,6 +30,10 @@ export default function SettingsPage() {
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='pie-chart-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Resumen</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Entypo name='line-graph' size={24} color='white' />
+          <Text style={styles.menuItemText}>Operar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='wallet-outline' size={24} color='white' />
@@ -69,6 +73,7 @@ const styles = StyleSheet.create({
   },
   settingsList: {
     flex: 1,
+    marginTop: 20,
     paddingHorizontal: 20,
   },
   settingItem: {
