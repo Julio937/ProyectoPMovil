@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -19,7 +19,7 @@ export default function TransactionsPage() {
             <Text style={styles.transactionDate}>10 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+            <Text style={styles.transactionAmount}>-$500.000,00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
@@ -28,7 +28,7 @@ export default function TransactionsPage() {
             <Text style={styles.transactionDate}>1 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.000.00</Text>
+            <Text style={styles.transactionAmount}>+$300.000,00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
@@ -46,7 +46,7 @@ export default function TransactionsPage() {
             <Text style={styles.transactionDate}>3 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+            <Text style={styles.transactionAmount}>-$500.000,00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
@@ -55,7 +55,7 @@ export default function TransactionsPage() {
             <Text style={styles.transactionDate}>2 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+            <Text style={styles.transactionAmount}>-$500.000,00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
@@ -64,7 +64,7 @@ export default function TransactionsPage() {
             <Text style={styles.transactionDate}>8 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+            <Text style={styles.transactionAmount}>-$500.000,00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
@@ -73,7 +73,7 @@ export default function TransactionsPage() {
             <Text style={styles.transactionDate}>10 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+            <Text style={styles.transactionAmount}>-$500.000,00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
@@ -82,7 +82,7 @@ export default function TransactionsPage() {
             <Text style={styles.transactionDate}>12 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$500.000.00</Text>
+            <Text style={styles.transactionAmount}>+$500.000,00</Text>
           </View>
         </View>
         <View style={styles.transactionItem}>
@@ -91,7 +91,7 @@ export default function TransactionsPage() {
             <Text style={styles.transactionDate}>18 de abril, 2024</Text>
           </View>
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000.00</Text>
+            <Text style={styles.transactionAmount}>-$500.000,00</Text>
           </View>
         </View>
       </ScrollView>
@@ -99,6 +99,10 @@ export default function TransactionsPage() {
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='pie-chart-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Resumen</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Entypo name='line-graph' size={24} color='white' />
+          <Text style={styles.menuItemText}>Operar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='wallet-outline' size={24} color='white' />
@@ -137,7 +141,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   transactionsList: {
+    marginTop: 20,
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   transactionItem: {
     flexDirection: 'row',

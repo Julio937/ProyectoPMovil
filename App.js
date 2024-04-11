@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
   transactionsList: {
     marginTop: 20,
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   transactionItem: {
     flexDirection: 'row',
