@@ -7,6 +7,7 @@ export default function OperarPage() {
   const [selectedAction, setSelectedAction] = React.useState('');
   const [quantity, setQuantity] = React.useState('');
   const [price, setPrice] = React.useState('');
+  const [isFormValid, setIsFormValid] = React.useState(false);
 
   const handleOperate = () => {
     if (selectedAction && quantity && price) {
@@ -15,6 +16,14 @@ export default function OperarPage() {
       Alert.alert('Por favor, complete todos los campos.');
     }
   };
+
+  React.useEffect(() => {
+    if (selectedAction && quantity) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+  }, [selectedAction, quantity, price]);
 
   return (
     <View style={styles.container}>
@@ -36,24 +45,26 @@ export default function OperarPage() {
         </View>
         <View style={styles.operarSelect}>
           <Text style={styles.operarTitle}>Seleccione una acción</Text>
-          <TouchableOpacity
-            style={[styles.operarSelectButton, selectedAction === 'ACCION 1' && styles.selected]}
-            onPress={() => setSelectedAction('ACCION 1')}
-          >
-            <Text style={styles.operarSelectText}>ACCION 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.operarSelectButton, selectedAction === 'ACCION 2' && styles.selected]}
-            onPress={() => setSelectedAction('ACCION 2')}
-          >
-            <Text style={styles.operarSelectText}>ACCION 2</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.operarSelectButton, selectedAction === 'ACCION 3' && styles.selected]}
-            onPress={() => setSelectedAction('ACCION 3')}
-          >
-            <Text style={styles.operarSelectText}>ACCION 3</Text>
-          </TouchableOpacity>
+          <View style={styles.actionList}>
+            <TouchableOpacity
+              style={[styles.operarSelectButton, selectedAction === 'ACCION 1' && styles.selected]}
+              onPress={() => setSelectedAction('ACCION 1')}
+            >
+              <Text style={styles.operarSelectText}>ACCION 1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.operarSelectButton, selectedAction === 'ACCION 2' && styles.selected]}
+              onPress={() => setSelectedAction('ACCION 2')}
+            >
+              <Text style={styles.operarSelectText}>ACCION 2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.operarSelectButton, selectedAction === 'ACCION 3' && styles.selected]}
+              onPress={() => setSelectedAction('ACCION 3')}
+            >
+              <Text style={styles.operarSelectText}>ACCION 3</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.operarItem}>
           <View style={styles.operarLeft}>
@@ -83,7 +94,10 @@ export default function OperarPage() {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.operarButton} onPress={handleOperate}>
+      <TouchableOpacity
+        style={[styles.operarButton, { backgroundColor: isFormValid ? '#F0B90B' : 'gray' }]}
+        onPress={handleOperate}
+      >
         <Text style={styles.operarButtonText}>Confirmar</Text>
       </TouchableOpacity>
       <View style={styles.bottomMenu}>
@@ -97,7 +111,7 @@ export default function OperarPage() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='list-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Transacciones</Text>
+          <Text style={[styles.menuItemText, styles.transactionsText]}>Transacciones</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name='settings-outline' size={24} color='white' />
@@ -180,6 +194,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+  actionList: {
+    marginTop: 10,
+  },
   selected: {
     backgroundColor: '#555',
   },
@@ -220,5 +237,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     marginTop: 5,
+  },
+  transactionsText: {
+    fontWeight: 'bold',
   },
 });

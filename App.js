@@ -45,24 +45,26 @@ export default function OperarPage() {
         </View>
         <View style={styles.operarSelect}>
           <Text style={styles.operarTitle}>Seleccione una acción</Text>
-          <TouchableOpacity
-            style={[styles.operarSelectButton, selectedAction === 'ACCION 1' && styles.selected]}
-            onPress={() => setSelectedAction('ACCION 1')}
-          >
-            <Text style={styles.operarSelectText}>ACCION 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.operarSelectButton, selectedAction === 'ACCION 2' && styles.selected]}
-            onPress={() => setSelectedAction('ACCION 2')}
-          >
-            <Text style={styles.operarSelectText}>ACCION 2</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.operarSelectButton, selectedAction === 'ACCION 3' && styles.selected]}
-            onPress={() => setSelectedAction('ACCION 3')}
-          >
-            <Text style={styles.operarSelectText}>ACCION 3</Text>
-          </TouchableOpacity>
+          <View style={styles.actionList}>
+            <TouchableOpacity
+              style={[styles.operarSelectButton, selectedAction === 'ACCION 1' && styles.selected]}
+              onPress={() => setSelectedAction('ACCION 1')}
+            >
+              <Text style={styles.operarSelectText}>ACCION 1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.operarSelectButton, selectedAction === 'ACCION 2' && styles.selected]}
+              onPress={() => setSelectedAction('ACCION 2')}
+            >
+              <Text style={styles.operarSelectText}>ACCION 2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.operarSelectButton, selectedAction === 'ACCION 3' && styles.selected]}
+              onPress={() => setSelectedAction('ACCION 3')}
+            >
+              <Text style={styles.operarSelectText}>ACCION 3</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.operarItem}>
           <View style={styles.operarLeft}>
@@ -191,6 +193,9 @@ const styles = StyleSheet.create({
   operarSelectText: {
     color: 'white',
     fontSize: 16,
+  },
+  actionList: {
+    marginTop: 10,
   },
   selected: {
     backgroundColor: '#555',
