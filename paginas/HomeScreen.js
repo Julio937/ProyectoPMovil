@@ -1,9 +1,25 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function App() {
+export default function HomeScreen() {
+  const navigation = useNavigation();
+
+  const handBalance = () => {
+    navigation.navigate('Balance');
+  };
+  const handTrade = () => {
+    navigation.navigate('Trade');
+  };
+  const handTransactions = () => {
+    navigation.navigate('Transactions');
+  };
+  const handConfiguration = () => {
+    navigation.navigate('Configuration');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.marketOverview}>
@@ -14,23 +30,24 @@ export default function App() {
         <Text style={styles.walletInfoText}>Balance de la cuenta</Text>
       </View>
       <View style={styles.bottomMenu}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handBalance}>
           <Ionicons name='wallet-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Balance</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handTrade}>
           <Entypo name='line-graph' size={24} color='white' />
           <Text style={styles.menuItemText}>Operar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handTransactions}>
           <Ionicons name='list-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Transacciones</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handConfiguration}>
           <Ionicons name='settings-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Configuración</Text>
         </TouchableOpacity>
       </View>
+
       <StatusBar style='auto' />
     </View>
   );

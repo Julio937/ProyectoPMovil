@@ -1,9 +1,25 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function WalletPage() {
+export default function BalanceScreen() {
+  const navigation = useNavigation();
+
+  const handHome = () => {
+    navigation.navigate('Home');
+  };
+  const handTrade = () => {
+    navigation.navigate('Trade');
+  };
+  const handTransactions = () => {
+    navigation.navigate('Transactions');
+  };
+  const handConfiguration = () => {
+    navigation.navigate('Configuration');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -23,19 +39,19 @@ export default function WalletPage() {
         </View>
       </ScrollView>
       <View style={styles.bottomMenu}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handHome}>
           <Ionicons name='pie-chart-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Resumen</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handTrade}>
           <Entypo name='line-graph' size={24} color='white' />
           <Text style={styles.menuItemText}>Operar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handTransactions}>
           <Ionicons name='list-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Transacciones</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handConfiguration}>
           <Ionicons name='settings-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Configuración</Text>
         </TouchableOpacity>

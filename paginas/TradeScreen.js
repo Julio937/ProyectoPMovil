@@ -1,9 +1,10 @@
-import { Entypo, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-export default function OperarPage() {
+export default function TradeScreen() {
   const [selectedAction, setSelectedAction] = React.useState('');
   const [quantity, setQuantity] = React.useState('');
   const [price, setPrice] = React.useState('');
@@ -24,6 +25,23 @@ export default function OperarPage() {
       setIsFormValid(false);
     }
   }, [selectedAction, quantity, price]);
+
+  const navigation = useNavigation();
+
+  const handHome = () => {
+    navigation.navigate('Home');
+  };
+
+  const handBalance = () => {
+    navigation.navigate('Balance');
+  };
+
+  const handTransactions = () => {
+    navigation.navigate('Transactions');
+  };
+  const handConfiguration = () => {
+    navigation.navigate('Configuration');
+  };
 
   return (
     <View style={styles.container}>
@@ -101,19 +119,19 @@ export default function OperarPage() {
         <Text style={styles.operarButtonText}>Confirmar</Text>
       </TouchableOpacity>
       <View style={styles.bottomMenu}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handHome}>
           <Ionicons name='pie-chart-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Resumen</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Entypo name='line-graph' size={24} color='white' />
-          <Text style={styles.menuItemText}>Operar</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={handBalance}>
+          <Ionicons name='wallet-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Balance</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handTransactions}>
           <Ionicons name='list-outline' size={24} color='white' />
           <Text style={[styles.menuItemText, styles.transactionsText]}>Transacciones</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handConfiguration}>
           <Ionicons name='settings-outline' size={24} color='white' />
           <Text style={styles.menuItemText}>Configuración</Text>
         </TouchableOpacity>
