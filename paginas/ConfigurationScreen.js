@@ -21,6 +21,9 @@ export default function ConfigurationScreen() {
   const handTransactions = () => {
     navigation.navigate('Transactions');
   };
+  const handleNotifications = () => {
+    navigation.navigate('Notifications');
+  };
 
   return (
     <View style={styles.container}>
@@ -31,17 +34,13 @@ export default function ConfigurationScreen() {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.settingsList}>
-        <TouchableOpacity style={styles.settingItem}>
+        <TouchableOpacity style={styles.settingItem} onPress={handleNotifications}>
           <Text style={styles.settingText}>Notificaciones</Text>
           <Ionicons name='notifications-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
         <TouchableOpacity style={styles.settingItem}>
           <Text style={styles.settingText}>Idioma</Text>
           <Ionicons name='language-outline' size={24} color='#F0B90B' />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.settingItem}>
-          <Text style={styles.settingText}>Tema</Text>
-          <Ionicons name='color-palette-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
       </ScrollView>
       <View style={styles.bottomMenu}>
