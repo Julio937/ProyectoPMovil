@@ -70,12 +70,15 @@ export default function TradeScreen() {
   const handConfiguration = () => {
     navigation.navigate('Configuration');
   };
+  const handleProfile = () => {
+    navigation.navigate('Profile');
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Operar</Text>
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity style={styles.profileButton} onPress={handleProfile}>
           <Ionicons name='person-circle-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
       </View>

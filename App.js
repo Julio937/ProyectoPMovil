@@ -6,6 +6,7 @@ import ConfigurationScreen from './paginas/ConfigurationScreen';
 import HomeScreen from './paginas/HomeScreen';
 import LoginScreen from './paginas/LoginScreen';
 import NotificationsScreen from './paginas/NotificationsScreen';
+import ProfileScreen from './paginas/ProfileScreen';
 import TradeScreen from './paginas/TradeScreen';
 import TransactionsScreen from './paginas/Transactions';
 
@@ -22,6 +23,7 @@ export default function App() {
         <Stack.Screen name='Trade' component={TradeScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Transactions' component={TransactionsScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Notifications' component={NotificationsScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='Profile' component={ProfileScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -18,11 +18,15 @@ export default function BalanceScreen() {
     navigation.navigate(screen);
   };
 
+  const handleProfile = () => {
+    navigation.navigate('Profile');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Balance</Text>
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity style={styles.profileButton} onPress={handleProfile}>
           <Ionicons name='person-circle-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
       </View>

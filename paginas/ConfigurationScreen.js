@@ -18,20 +18,23 @@ export default function ConfigurationScreen() {
   const handTrade = () => {
     navigation.navigate('Trade');
   };
+
   const handTransactions = () => {
     navigation.navigate('Transactions');
   };
+
   const handleNotifications = () => {
     navigation.navigate('Notifications');
+  };
+
+  const handleProfile = () => {
+    navigation.navigate('Profile');
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Configuración</Text>
-        <TouchableOpacity style={styles.profileButton}>
-          <Ionicons name='person-circle-outline' size={24} color='#F0B90B' />
-        </TouchableOpacity>
       </View>
       <ScrollView style={styles.settingsList}>
         <TouchableOpacity style={styles.settingItem} onPress={handleNotifications}>
@@ -41,6 +44,10 @@ export default function ConfigurationScreen() {
         <TouchableOpacity style={styles.settingItem}>
           <Text style={styles.settingText}>Idioma</Text>
           <Ionicons name='language-outline' size={24} color='#F0B90B' />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.settingItem} onPress={handleProfile}>
+          <Text style={styles.settingText}>Perfil</Text>
+          <Ionicons name='person-circle-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
       </ScrollView>
       <View style={styles.bottomMenu}>
