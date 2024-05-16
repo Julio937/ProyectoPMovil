@@ -9,6 +9,9 @@ export default function LoginScreen() {
   const handleLogin = () => {
     navigation.navigate('Home');
   };
+  const handleSignUp = () => {
+    navigation.navigate('SignUp');
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>Acciones & Gestión</Text>
@@ -34,6 +37,9 @@ export default function LoginScreen() {
       </View>
       <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
         <Text style={styles.loginText}>Iniciar Sesión</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.loginBtn} onPress={handleSignUp}>
+        <Text style={styles.loginText}>Registrarse</Text>
       </TouchableOpacity>
       <StatusBar style='auto' />
     </View>
