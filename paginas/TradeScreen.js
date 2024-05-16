@@ -9,22 +9,49 @@ export default function TradeScreen() {
   const [quantity, setQuantity] = React.useState('');
   const [price, setPrice] = React.useState('');
   const [isFormValid, setIsFormValid] = React.useState(false);
+  const [quantityError, setQuantityError] = React.useState('');
+  const [priceError, setPriceError] = React.useState('');
+  const [selectedActionName, setSelectedActionName] = React.useState('');
+  const [totalAmount, setTotalAmount] = React.useState(0);
 
   const handleOperate = () => {
-    if (selectedAction && quantity && price) {
-      Alert.alert(`Operación realizada: ${selectedAction} ${quantity} a $${price}`);
+    if (isNaN(parseFloat(quantity)) || parseFloat(quantity) <= 0) {
+      setQuantityError('Ingrese una cantidad válida.');
+    } else if (isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
+      setPriceError('Ingrese un precio válido.');
+    } else if (selectedAction && quantity && price) {
+      const totalPrice = parseFloat(quantity) * parseFloat(price);
+      setTotalAmount(totalPrice.toFixed(2));
+      Alert.alert(`Operación realizada: ${selectedActionName} ${quantity} a $${price}`);
+      setQuantity('');
+      setPrice('');
+      setQuantityError('');
+      setPriceError('');
     } else {
       Alert.alert('Por favor, complete todos los campos.');
     }
   };
 
   React.useEffect(() => {
-    if (selectedAction && quantity) {
+    if (selectedAction && quantity && !isNaN(parseFloat(quantity)) && parseFloat(quantity) > 0) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
   }, [selectedAction, quantity, price]);
+
+  React.useEffect(() => {
+    if (selectedAction === 'ACCION 1') {
+      setSelectedActionName('Empresa X');
+      setPrice((Math.random() * (100 - 10) + 10).toFixed(2));
+    } else if (selectedAction === 'ACCION 2') {
+      setSelectedActionName('Empresa Y');
+      setPrice((Math.random() * (100 - 10) + 10).toFixed(2));
+    } else if (selectedAction === 'ACCION 3') {
+      setSelectedActionName('Empresa Z');
+      setPrice((Math.random() * (100 - 10) + 10).toFixed(2));
+    }
+  }, [selectedAction]);
 
   const navigation = useNavigation();
 
@@ -39,6 +66,7 @@ export default function TradeScreen() {
   const handTransactions = () => {
     navigation.navigate('Transactions');
   };
+
   const handConfiguration = () => {
     navigation.navigate('Configuration');
   };
@@ -55,15 +83,15 @@ export default function TradeScreen() {
         <View style={styles.operarItem}>
           <View style={styles.operarLeft}>
             <Text style={styles.operarTitle}>Acción</Text>
-            <Text style={styles.operarDate}>Nombre de la acción</Text>
+            <Text style={styles.operarDate}>{selectedActionName}</Text>
           </View>
           <View style={styles.operarRight}>
-            <Text style={styles.operarAmount}>$0,00</Text>
+            <Text style={styles.operarAmount}>${price}</Text>
           </View>
         </View>
         <View style={styles.operarSelect}>
           <Text style={styles.operarTitle}>Seleccione una acción</Text>
-          <View style={styles.actionList}>
+          <ScrollView style={styles.actionList}>
             <TouchableOpacity
               style={[styles.operarSelectButton, selectedAction === 'ACCION 1' && styles.selected]}
               onPress={() => setSelectedAction('ACCION 1')}
@@ -82,7 +110,7 @@ export default function TradeScreen() {
             >
               <Text style={styles.operarSelectText}>ACCION 3</Text>
             </TouchableOpacity>
-          </View>
+          </ScrollView>
         </View>
         <View style={styles.operarItem}>
           <View style={styles.operarLeft}>
@@ -90,7 +118,16 @@ export default function TradeScreen() {
             <Text style={styles.operarDate}>Cantidad de acciones</Text>
           </View>
           <View style={styles.operarRight}>
-            <TextInput style={styles.input} value={quantity} onChangeText={setQuantity} keyboardType='numeric' />
+            <TextInput
+              style={[styles.input, quantityError && styles.inputError]}
+              value={quantity}
+              onChangeText={(text) => {
+                setQuantity(text);
+                setQuantityError('');
+              }}
+              keyboardType='numeric'
+            />
+            {quantityError ? <Text style={styles.errorText}>{quantityError}</Text> : null}
           </View>
         </View>
         <View style={styles.operarItem}>
@@ -99,7 +136,16 @@ export default function TradeScreen() {
             <Text style={styles.operarDate}>Precio de la acción</Text>
           </View>
           <View style={styles.operarRight}>
-            <Text style={styles.input} value={price} onChangeText={setPrice} keyboardType='numeric' />
+            <TextInput
+              style={[styles.input, priceError && styles.inputError]}
+              value={price}
+              onChangeText={(text) => {
+                setPrice(text);
+                setPriceError('');
+              }}
+              keyboardType='numeric'
+            />
+            {priceError ? <Text style={styles.errorText}>{priceError}</Text> : null}
           </View>
         </View>
         <View style={styles.operarItem}>
@@ -108,13 +154,14 @@ export default function TradeScreen() {
             <Text style={styles.operarDate}>Total a pagar/recibir</Text>
           </View>
           <View style={styles.operarRight}>
-            <Text style={styles.operarAmount}>$0,00</Text>
+            <Text style={styles.operarAmount}>${totalAmount}</Text>
           </View>
         </View>
       </ScrollView>
       <TouchableOpacity
         style={[styles.operarButton, { backgroundColor: isFormValid ? '#F0B90B' : 'gray' }]}
         onPress={handleOperate}
+        disabled={!isFormValid}
       >
         <Text style={styles.operarButtonText}>Confirmar</Text>
       </TouchableOpacity>
@@ -226,6 +273,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: '100%',
   },
+  inputError: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
   operarButton: {
     backgroundColor: 'gray',
     borderRadius: 10,
@@ -258,5 +309,9 @@ const styles = StyleSheet.create({
   },
   transactionsText: {
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 5,
   },
 });
