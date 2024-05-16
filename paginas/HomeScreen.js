@@ -1,11 +1,16 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useContext } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BalanceContext } from '../logic/Context';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const context = useContext(BalanceContext);
+
+  const balance = context?.balance;
+  const earnings = context?.earnings;
 
   const handBalance = () => {
     navigation.navigate('Balance');
@@ -24,13 +29,13 @@ export default function HomeScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.marketOverview}>
         <Text style={styles.sectionTitle}>Estado actual del mercado</Text>
-        <Text style={styles.marketOverviewText}>Dow Jones: +0.45%</Text>
-        <Text style={styles.marketOverviewText}>S&P 500: +0.60%</Text>
+        <Text style={styles.marketOverviewText}>Dow Jones: 34,000</Text>
+        <Text style={styles.marketOverviewText}>S&P 500: 4,000</Text>
       </View>
 
       <View style={styles.walletInfo}>
         <Text style={styles.sectionTitle}>Balance de la cuenta</Text>
-        <Text style={styles.walletInfoText}>$12,345.67</Text>
+        <Text style={styles.walletInfoText}>${balance ? balance.toLocaleString() : '0'}</Text>
       </View>
 
       <View style={styles.bottomMenu}>
