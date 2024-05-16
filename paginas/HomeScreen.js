@@ -2,7 +2,7 @@ import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -21,14 +21,18 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.marketOverview}>
-        <Text style={styles.marketOverviewText}>Estado actual del mercado</Text>
+        <Text style={styles.sectionTitle}>Estado actual del mercado</Text>
+        <Text style={styles.marketOverviewText}>Dow Jones: +0.45%</Text>
+        <Text style={styles.marketOverviewText}>S&P 500: +0.60%</Text>
       </View>
 
       <View style={styles.walletInfo}>
-        <Text style={styles.walletInfoText}>Balance de la cuenta</Text>
+        <Text style={styles.sectionTitle}>Balance de la cuenta</Text>
+        <Text style={styles.walletInfoText}>$12,345.67</Text>
       </View>
+
       <View style={styles.bottomMenu}>
         <TouchableOpacity style={styles.menuItem} onPress={handBalance}>
           <Ionicons name='wallet-outline' size={24} color='white' />
@@ -49,32 +53,49 @@ export default function HomeScreen() {
       </View>
 
       <StatusBar style='auto' />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#141414',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 20,
   },
   marketOverview: {
     flex: 1,
     justifyContent: 'center',
+    width: '90%',
+    padding: 10,
+    backgroundColor: '#1f1f1f',
+    borderRadius: 10,
+    marginBottom: 20,
   },
-  marketOverviewText: {
+  sectionTitle: {
     color: '#F0B90B',
     fontSize: 24,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  marketOverviewText: {
+    color: '#ffffff',
+    fontSize: 18,
     textAlign: 'center',
   },
   walletInfo: {
     flex: 1,
     justifyContent: 'center',
+    width: '90%',
+    padding: 10,
+    backgroundColor: '#1f1f1f',
+    borderRadius: 10,
+    marginBottom: 20,
   },
   walletInfoText: {
-    color: '#F0B90B',
+    color: '#ffffff',
     fontSize: 24,
     textAlign: 'center',
   },
@@ -82,7 +103,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingBottom: 20,
     width: '100%',
   },
   menuItem: {
