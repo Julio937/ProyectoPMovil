@@ -10,7 +10,8 @@ export default function RegisterScreen() {
     lastName: '',
     email: '',
     password: '',
-    cedula: '',
+    id_card: '',
+    country: '',
   });
 
   const validateEmail = (text) => {
@@ -23,8 +24,9 @@ export default function RegisterScreen() {
     registerData.lastName &&
     registerData.email &&
     registerData.password &&
-    registerData.cedula &&
-    validateEmail(registerData.email);
+    registerData.id_card &&
+    validateEmail(registerData.email) &&
+    registerData.country;
 
   const handleRegister = () => {
     console.log('Registro completado');
@@ -32,7 +34,8 @@ export default function RegisterScreen() {
     console.log('Apellido:', registerData.lastName);
     console.log('Correo Electrónico:', registerData.email);
     console.log('Contraseña:', registerData.password);
-    console.log('Cédula:', registerData.cedula);
+    console.log('Cédula:', registerData.id_card);
+    console.log('País:', registerData.country);
 
     navigation.navigate('Home');
   };
@@ -74,9 +77,15 @@ export default function RegisterScreen() {
         <TextInput
           style={styles.input}
           placeholder='Cédula'
-          value={registerData.cedula}
-          onChangeText={(text) => setRegisterData({ ...registerData, cedula: text })}
+          value={registerData.id_card}
+          onChangeText={(text) => setRegisterData({ ...registerData, id_card: text })}
           keyboardType='numeric'
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='País'
+          value={registerData.country}
+          onChangeText={(text) => setRegisterData({ ...registerData, country: text })}
         />
       </View>
       <TouchableOpacity

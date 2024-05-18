@@ -42,8 +42,8 @@ export default function ConfigurationScreen() {
           <Ionicons name='notifications-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
         <TouchableOpacity style={styles.settingItem}>
-          <Text style={styles.settingText}>Idioma</Text>
-          <Ionicons name='language-outline' size={24} color='#F0B90B' />
+          <Text style={styles.settingText}>País</Text>
+          <Ionicons name='flag-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
         <TouchableOpacity style={styles.settingItem} onPress={handleProfile}>
           <Text style={styles.settingText}>Perfil</Text>

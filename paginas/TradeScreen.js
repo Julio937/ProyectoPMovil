@@ -8,11 +8,54 @@ export default function TradeScreen() {
   const [selectedAction, setSelectedAction] = React.useState('');
   const [quantity, setQuantity] = React.useState('');
   const [price, setPrice] = React.useState('');
+  const [priceInUSD, setPriceInUSD] = React.useState('');
   const [isFormValid, setIsFormValid] = React.useState(false);
   const [quantityError, setQuantityError] = React.useState('');
   const [priceError, setPriceError] = React.useState('');
   const [selectedActionName, setSelectedActionName] = React.useState('');
   const [totalAmount, setTotalAmount] = React.useState(0);
+  const [userCountry, setUserCountry] = React.useState('Colombia');
+  const [selectedCurrency, setSelectedCurrency] = React.useState('');
+  const [countryError, setCountryError] = React.useState('');
+  const [isBuying, setIsBuying] = React.useState(true);
+
+  const actionsByCountry = {
+    Colombia: [
+      { id: 'ACCION 1', name: 'Empresa X', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
+      { id: 'ACCION 2', name: 'Empresa Y', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
+    ],
+    Bolivia: [
+      { id: 'ACCION 1', name: 'Empresa X', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
+      { id: 'ACCION 3', name: 'Empresa Z', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
+    ],
+  };
+
+  const UserActions = {
+    Colombia: [
+      { id: 'ACCION 10', name: 'Empresa X', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
+      { id: 'ACCION 21', name: 'Empresa Y', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
+    ],
+    Bolivia: [
+      { id: 'ACCION 15', name: 'Empresa X', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
+      { id: 'ACCION 33', name: 'Empresa Z', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
+    ],
+  };
+
+  const currenciesByCountry = {
+    Colombia: ['COP', 'USD'],
+    Bolivia: ['BOB', 'USD'],
+  };
+
+  const exchangeRates = {
+    USD: 1,
+    COP: 3830.13,
+    BOB: 6.91,
+  };
+
+  const convertPrice = (priceInUSD, currency) => {
+    const rate = exchangeRates[currency];
+    return (priceInUSD * rate).toFixed(2);
+  };
 
   const handleOperate = () => {
     if (isNaN(parseFloat(quantity)) || parseFloat(quantity) <= 0) {
@@ -22,7 +65,10 @@ export default function TradeScreen() {
     } else if (selectedAction && quantity && price) {
       const totalPrice = parseFloat(quantity) * parseFloat(price);
       setTotalAmount(totalPrice.toFixed(2));
-      Alert.alert(`Operación realizada: ${selectedActionName} ${quantity} a $${price}`);
+      const operationType = isBuying ? 'Compra' : 'Venta'; // Determina el tipo de operación (compra o venta)
+      Alert.alert(
+        `Operación realizada: ${operationType} de ${selectedActionName} ${quantity} a ${selectedCurrency} ${price}`
+      );
       setQuantity('');
       setPrice('');
       setQuantityError('');
@@ -41,38 +87,74 @@ export default function TradeScreen() {
   }, [selectedAction, quantity, price]);
 
   React.useEffect(() => {
-    if (selectedAction === 'ACCION 1') {
-      setSelectedActionName('Empresa X');
-      setPrice((Math.random() * (100 - 10) + 10).toFixed(2));
-    } else if (selectedAction === 'ACCION 2') {
-      setSelectedActionName('Empresa Y');
-      setPrice((Math.random() * (100 - 10) + 10).toFixed(2));
-    } else if (selectedAction === 'ACCION 3') {
-      setSelectedActionName('Empresa Z');
-      setPrice((Math.random() * (100 - 10) + 10).toFixed(2));
+    if (userCountry in actionsByCountry) {
+      const action = actionsByCountry[userCountry].find((action) => action.id === selectedAction);
+      if (action) {
+        const priceUSD = parseFloat(action.price);
+        setSelectedActionName(action.name);
+        setPriceInUSD(priceUSD);
+        setPrice(priceUSD);
+        setCountryError('');
+      } else {
+        setSelectedActionName('');
+        setPrice('');
+      }
+    } else {
+      setCountryError('El país del usuario no está disponible.');
+      setSelectedActionName('');
+      setPrice('');
     }
-  }, [selectedAction]);
+  }, [selectedAction, userCountry]);
+
+  React.useEffect(() => {
+    if (userCountry in currenciesByCountry) {
+      setSelectedCurrency(currenciesByCountry[userCountry][0]);
+    } else {
+      setSelectedCurrency('');
+    }
+  }, [userCountry]);
+
+  React.useEffect(() => {
+    if (selectedCurrency === 'USD') {
+      setPrice(priceInUSD.toFixed(2));
+    } else {
+      setPrice(convertPrice(priceInUSD, selectedCurrency));
+    }
+  }, [selectedCurrency]);
 
   const navigation = useNavigation();
 
-  const handHome = () => {
+  const handleHome = () => {
     navigation.navigate('Home');
   };
 
-  const handBalance = () => {
+  const handleBalance = () => {
     navigation.navigate('Balance');
   };
 
-  const handTransactions = () => {
+  const handleTransactions = () => {
     navigation.navigate('Transactions');
   };
 
-  const handConfiguration = () => {
+  const handleConfiguration = () => {
     navigation.navigate('Configuration');
   };
+
   const handleProfile = () => {
     navigation.navigate('Profile');
   };
+
+  const handleBuy = () => {
+    setSelectedAction('');
+    setIsBuying(true);
+  };
+
+  const handleSell = () => {
+    setSelectedAction('');
+    setIsBuying(false);
+  };
+
+  const actionsToDisplay = isBuying ? actionsByCountry[userCountry] : UserActions[userCountry];
 
   return (
     <View style={styles.container}>
@@ -82,6 +164,7 @@ export default function TradeScreen() {
           <Ionicons name='person-circle-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
       </View>
+      {countryError ? <Text style={styles.errorText}>{countryError}</Text> : null}
       <ScrollView contentContainerStyle={styles.operarList}>
         <View style={styles.operarItem}>
           <View style={styles.operarLeft}>
@@ -93,27 +176,70 @@ export default function TradeScreen() {
           </View>
         </View>
         <View style={styles.operarSelect}>
+          <View style={styles.operarLeft}>
+            <Text style={styles.operarTitle}>Operación</Text>
+          </View>
+        </View>
+        <View style={styles.operarOptions}>
+          <TouchableOpacity
+            style={[styles.operarOptionButton, isBuying ? styles.selectedOption : null]}
+            onPress={handleBuy}
+          >
+            <Text style={styles.operarSelectText}>Comprar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.operarOptionButton, !isBuying ? styles.selectedOption : null]}
+            onPress={handleSell}
+          >
+            <Text style={styles.operarSelectText}>Vender</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.operarSelect}>
           <Text style={styles.operarTitle}>Seleccione una acción</Text>
           <ScrollView style={styles.actionList}>
-            <TouchableOpacity
-              style={[styles.operarSelectButton, selectedAction === 'ACCION 1' && styles.selected]}
-              onPress={() => setSelectedAction('ACCION 1')}
-            >
-              <Text style={styles.operarSelectText}>ACCION 1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.operarSelectButton, selectedAction === 'ACCION 2' && styles.selected]}
-              onPress={() => setSelectedAction('ACCION 2')}
-            >
-              <Text style={styles.operarSelectText}>ACCION 2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.operarSelectButton, selectedAction === 'ACCION 3' && styles.selected]}
-              onPress={() => setSelectedAction('ACCION 3')}
-            >
-              <Text style={styles.operarSelectText}>ACCION 3</Text>
-            </TouchableOpacity>
+            {userCountry in actionsByCountry ? (
+              actionsToDisplay.map((action) => (
+                <TouchableOpacity
+                  key={action.id}
+                  style={[styles.operarSelectButton, selectedAction === action.id && styles.selected]}
+                  onPress={() => setSelectedAction(action.id)}
+                >
+                  <Text style={styles.operarSelectText}>{action.id}</Text>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.errorText}>No hay acciones disponibles para el país del usuario.</Text>
+            )}
           </ScrollView>
+        </View>
+        <View style={styles.operarItem}>
+          <View style={styles.operarLeft}>
+            <Text style={styles.operarTitle}>Moneda</Text>
+            <Text style={styles.operarDate}>Seleccione la moneda</Text>
+          </View>
+          <View style={styles.operarRight}>
+            <ScrollView style={styles.actionList} horizontal>
+              {userCountry in currenciesByCountry ? (
+                currenciesByCountry[userCountry].map((currency) => (
+                  <TouchableOpacity
+                    key={currency}
+                    style={[
+                      styles.operarSelectButton,
+                      selectedCurrency === currency && styles.selected,
+                      !selectedAction && styles.disabledButton,
+                      selectedAction && styles.enabledButton,
+                    ]}
+                    onPress={() => setSelectedCurrency(currency)}
+                    disabled={!selectedAction}
+                  >
+                    <Text style={styles.operarSelectText}>{currency}</Text>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <Text style={styles.errorText}>No hay tipo de monedas disponibles para el país del usuario.</Text>
+              )}
+            </ScrollView>
+          </View>
         </View>
         <View style={styles.operarItem}>
           <View style={styles.operarLeft}>
@@ -154,38 +280,15 @@ export default function TradeScreen() {
         <View style={styles.operarItem}>
           <View style={styles.operarLeft}>
             <Text style={styles.operarTitle}>Total</Text>
-            <Text style={styles.operarDate}>Total a pagar/recibir</Text>
+            <Text style={styles.operarDate}>Total {isBuying ? 'pagado' : 'vendido'}/recibido</Text>
           </View>
           <View style={styles.operarRight}>
-            <Text style={styles.operarAmount}>${totalAmount}</Text>
+            <Text style={styles.operarAmount}>
+              {selectedCurrency} {totalAmount}
+            </Text>
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity
-        style={[styles.operarButton, { backgroundColor: isFormValid ? '#F0B90B' : 'gray' }]}
-        onPress={handleOperate}
-        disabled={!isFormValid}
-      >
-        <Text style={styles.operarButtonText}>Confirmar</Text>
-      </TouchableOpacity>
-      <View style={styles.bottomMenu}>
-        <TouchableOpacity style={styles.menuItem} onPress={handHome}>
-          <Ionicons name='pie-chart-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Resumen</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={handBalance}>
-          <Ionicons name='wallet-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Balance</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={handTransactions}>
-          <Ionicons name='list-outline' size={24} color='white' />
-          <Text style={[styles.menuItemText, styles.transactionsText]}>Transacciones</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={handConfiguration}>
-          <Ionicons name='settings-outline' size={24} color='white' />
-          <Text style={styles.menuItemText}>Configuración</Text>
-        </TouchableOpacity>
-      </View>
       <StatusBar style='auto' />
     </View>
   );
@@ -230,6 +333,10 @@ const styles = StyleSheet.create({
   operarLeft: {
     flex: 1,
   },
+  operarOptions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   operarRight: {
     flex: 1,
     alignItems: 'flex-end',
@@ -265,6 +372,12 @@ const styles = StyleSheet.create({
   actionList: {
     marginTop: 10,
   },
+  disabledButton: {
+    opacity: 0.5,
+  },
+  enabledButton: {
+    opacity: 1,
+  },
   selected: {
     backgroundColor: '#555',
   },
@@ -282,6 +395,15 @@ const styles = StyleSheet.create({
   },
   operarButton: {
     backgroundColor: 'gray',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  operarOptionButton: {
+    backgroundColor: 'gray',
+    width: '40%',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
@@ -316,5 +438,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginTop: 5,
+    textAlign: 'center',
   },
 });

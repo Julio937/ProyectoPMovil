@@ -5,29 +5,27 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 export default function ProfileScreen() {
   const navigation = useNavigation();
 
-  // Estado local para los datos del perfil
   const [profileData, setProfileData] = useState({
     name: '',
     lastName: '',
     email: '',
+    country: '',
     password: '',
   });
 
   useEffect(() => {
-    // Cargar los datos del perfil solo en la primera renderización
     loadProfileData();
   }, []);
 
   const loadProfileData = () => {
-    // Simular cargar los datos del perfil desde un almacenamiento externo (por ejemplo, AsyncStorage)
     const storedProfileData = {
       name: 'Julian',
       lastName: 'Vallejo',
       email: 'julian@example.com',
+      country: 'Colombia',
       password: '********',
     };
 
-    // Actualizar el estado local con los datos del perfil cargados
     setProfileData(storedProfileData);
   };
 
@@ -74,6 +72,12 @@ export default function ProfileScreen() {
           value={profileData.password}
           onChangeText={(text) => setProfileData({ ...profileData, password: text })}
           secureTextEntry={true}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='País'
+          value={profileData.country}
+          onChangeText={(text) => setProfileData({ ...profileData, country: text })}
         />
       </View>
       <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
