@@ -1,23 +1,28 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function CountryScreen() {
   const navigation = useNavigation();
 
-  const handleGoToLogin = () => {
-    navigation.navigate('Login');
+  const handleGoBack = () => {
+    navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>País</Text>
+      <TouchableOpacity style={styles.countryButton} onPress={handleGoBack}>
+        <Text style={styles.buttonCountryText}>Colombia</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.countryButton} onPress={handleGoBack}>
+        <Text style={styles.buttonCountryText}>Bolivia</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.countryButton} onPress={handleGoBack}>
+        <Text style={styles.buttonCountryText}>Mexico</Text>
+      </TouchableOpacity>
       <View style={styles.form}>
-        <TextInput style={styles.input} placeholder='País' />
-        <TouchableOpacity style={styles.registerButton}>
-          <Text style={styles.buttonText}>Guardar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.goBackButton} onPress={handleGoToLogin}>
+        <TouchableOpacity style={styles.goBackButton} onPress={handleGoBack}>
           <Text style={styles.buttonText}>Volver</Text>
         </TouchableOpacity>
       </View>
@@ -36,6 +41,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    marginTop: 20,
   },
   form: {
     flex: 1,
@@ -50,7 +56,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
   },
-  registerButton: {
+  countryButton: {
     alignItems: 'center',
     backgroundColor: '#F0B90B',
     borderRadius: 5,
@@ -58,8 +64,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 20,
   },
-  buttonText: {
+  buttonCountryText: {
     color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonText: {
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },

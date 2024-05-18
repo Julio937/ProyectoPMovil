@@ -65,7 +65,7 @@ export default function TradeScreen() {
     } else if (selectedAction && quantity && price) {
       const totalPrice = parseFloat(quantity) * parseFloat(price);
       setTotalAmount(totalPrice.toFixed(2));
-      const operationType = isBuying ? 'Compra' : 'Venta'; // Determina el tipo de operación (compra o venta)
+      const operationType = isBuying ? 'Compra' : 'Venta';
       Alert.alert(
         `Operación realizada: ${operationType} de ${selectedActionName} ${quantity} a ${selectedCurrency} ${price}`
       );
@@ -289,6 +289,24 @@ export default function TradeScreen() {
           </View>
         </View>
       </ScrollView>
+      <View style={styles.bottomMenu}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleHome}>
+          <Ionicons name='pie-chart-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Resumen</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={handleTransactions}>
+          <Ionicons name='list-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Transacciones</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={handleBalance}>
+          <Ionicons name='wallet-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Balance</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={handleConfiguration}>
+          <Ionicons name='settings-outline' size={24} color='white' />
+          <Text style={styles.menuItemText}>Configuración</Text>
+        </TouchableOpacity>
+      </View>
       <StatusBar style='auto' />
     </View>
   );

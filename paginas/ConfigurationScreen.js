@@ -31,6 +31,10 @@ export default function ConfigurationScreen() {
     navigation.navigate('Profile');
   };
 
+  const handleCountry = () => {
+    navigation.navigate('Country');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -41,7 +45,7 @@ export default function ConfigurationScreen() {
           <Text style={styles.settingText}>Notificaciones</Text>
           <Ionicons name='notifications-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.settingItem}>
+        <TouchableOpacity style={styles.settingItem} onPress={handleCountry}>
           <Text style={styles.settingText}>País</Text>
           <Ionicons name='flag-outline' size={24} color='#F0B90B' />
         </TouchableOpacity>
