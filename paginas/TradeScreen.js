@@ -289,6 +289,13 @@ export default function TradeScreen() {
           </View>
         </View>
       </ScrollView>
+      <TouchableOpacity
+        style={[styles.operarButton, { backgroundColor: isFormValid ? '#F0B90B' : 'gray' }]}
+        onPress={handleOperate}
+        disabled={!isFormValid}
+      >
+        <Text style={styles.operarButtonText}>Confirmar</Text>
+      </TouchableOpacity>
       <View style={styles.bottomMenu}>
         <TouchableOpacity style={styles.menuItem} onPress={handleHome}>
           <Ionicons name='pie-chart-outline' size={24} color='white' />
