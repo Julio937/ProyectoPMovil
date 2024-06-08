@@ -1,50 +1,117 @@
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import { jwtDecode } from 'jwt-decode';
+import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import config from '../logic/config';
 
 export default function TradeScreen() {
   const [selectedAction, setSelectedAction] = React.useState('');
   const [quantity, setQuantity] = React.useState('');
   const [price, setPrice] = React.useState('');
-  const [priceInUSD, setPriceInUSD] = React.useState('');
+  const [priceInUSD, setPriceInUSD] = React.useState(0);
   const [isFormValid, setIsFormValid] = React.useState(false);
   const [quantityError, setQuantityError] = React.useState('');
   const [priceError, setPriceError] = React.useState('');
   const [selectedActionName, setSelectedActionName] = React.useState('');
   const [totalAmount, setTotalAmount] = React.useState(0);
   const [userCountry, setUserCountry] = React.useState('Colombia');
-  const [selectedCurrency, setSelectedCurrency] = React.useState('');
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [countryError, setCountryError] = React.useState('');
   const [isBuying, setIsBuying] = React.useState(true);
 
-  const actionsByCountry = {
-    Colombia: [
-      { id: 'ACCION 1', name: 'Empresa X', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
-      { id: 'ACCION 2', name: 'Empresa Y', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
-    ],
-    Bolivia: [
-      { id: 'ACCION 1', name: 'Empresa X', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
-      { id: 'ACCION 3', name: 'Empresa Z', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
-    ],
+  const [accionesDisponibles, setAccionesDisponibles] = useState([]);
+  const [availableCurrencies, setAvailableCurrencies] = useState([]);
+  const [userCountryId, setUserCountryId] = useState(null);
+
+  const fetchUserData = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (userToken) {
+        const decodedToken = jwtDecode(userToken);
+        const userId = decodedToken.usuario.id;
+        // Obtener los datos del usuario junto con sus acciones
+        const responseUsuario = await axios.get(`${config.SERVER_IP}/usuarios/${userId}`);
+        const usuarioConAcciones = responseUsuario.data;
+
+        // Si el usuario está comprando, obtener las acciones permitidas para el país del usuario
+        if (isBuying) {
+          const responseAccionesPermitidas = await axios.get(
+            `${config.SERVER_IP}/paises/${usuarioConAcciones.pais_id}`
+          );
+          let accionesPermitidas = responseAccionesPermitidas.data.acciones_permitidas;
+
+          // Verificar si accionesPermitidas es un arreglo o un solo valor
+          if (Array.isArray(accionesPermitidas)) {
+            // Es un arreglo, obtener detalles de cada acción
+            const accionesDetalles = await Promise.all(
+              accionesPermitidas.map(async (accionId) => {
+                const responseAccion = await axios.get(`${config.SERVER_IP}/acciones/${accionId}`);
+                return responseAccion.data;
+              })
+            );
+            setAccionesDisponibles(accionesDetalles);
+          } else if (accionesPermitidas) {
+            // Es un solo valor, obtener detalles de esa acción
+            const responseAccion = await axios.get(`${config.SERVER_IP}/acciones/${accionesPermitidas}`);
+          } else {
+            // No hay acciones permitidas
+            setAccionesDisponibles([]);
+          }
+        } else {
+          setAccionesDisponibles(usuarioConAcciones.acciones || []);
+        }
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+    }
+  };
+  useEffect(() => {
+    fetchUserData();
+  }, [isBuying]);
+
+  const handleBuySellToggle = (isBuy) => {
+    setIsBuying(isBuy);
+    setSelectedAction('');
+    setSelectedActionName('');
+    setPrice('');
+    setTotalAmount(0);
+    // Llamar a fetchUserData para actualizar las acciones disponibles según el modo (comprar/vender)
+    fetchUserData();
   };
 
-  const UserActions = {
-    Colombia: [
-      { id: 'ACCION 10', name: 'Empresa X', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
-      { id: 'ACCION 21', name: 'Empresa Y', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
-    ],
-    Bolivia: [
-      { id: 'ACCION 15', name: 'Empresa X', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
-      { id: 'ACCION 33', name: 'Empresa Z', price: (Math.random() * (100 - 10) + 10).toFixed(2) },
-    ],
-  };
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem('userToken');
+        if (userToken) {
+          const decodedToken = jwtDecode(userToken);
+          const userId = decodedToken.usuario.id;
+          // Obtener el país del usuario
+          const responseUsuario = await axios.get(`${config.SERVER_IP}/usuarios/${userId}`);
+          const paisId = responseUsuario.data.pais_id;
+          // Obtener las monedas permitidas para el país del usuario
+          const responseMonedas = await axios.get(`${config.SERVER_IP}/moneda`);
+          const monedasPermitidas = responseMonedas.data.filter((moneda) => moneda.pais_id === paisId);
+          // Actualizar el estado con las monedas permitidas
+          setAvailableCurrencies(monedasPermitidas.map((moneda) => moneda.nombre));
+          if (monedasPermitidas.includes('USD')) {
+            setSelectedCurrency('USD');
+          } else {
+            // Si USD no está disponible, selecciona la primera moneda disponible
+            setSelectedCurrency(monedasPermitidas[0].nombre);
+          }
+        }
+      } catch (error) {
+        console.error('Error al obtener las monedas:', error);
+      }
+    };
 
-  const currenciesByCountry = {
-    Colombia: ['COP', 'USD'],
-    Bolivia: ['BOB', 'USD'],
-  };
+    fetchCurrencies();
+  }, [userCountryId]); // Dependencia para re-fetch cuando cambie el país del usuario
 
   const exchangeRates = {
     USD: 1,
@@ -52,23 +119,62 @@ export default function TradeScreen() {
     BOB: 6.91,
   };
 
-  const convertPrice = (priceInUSD, currency) => {
+  const convertPrice = (price, currency) => {
     const rate = exchangeRates[currency];
-    return (priceInUSD * rate).toFixed(2);
+    // Asegúrate de que el precio sea un número antes de convertirlo
+    const numericPrice = typeof price === 'number' ? price : parseFloat(price);
+    return (numericPrice * rate).toFixed(2);
   };
 
-  const handleOperate = () => {
+  const handleOperate = async () => {
     if (isNaN(parseFloat(quantity)) || parseFloat(quantity) <= 0) {
       setQuantityError('Ingrese una cantidad válida.');
     } else if (isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
       setPriceError('Ingrese un precio válido.');
     } else if (selectedAction && quantity && price) {
-      const totalPrice = parseFloat(quantity) * parseFloat(price);
+      const totalPrice = parseFloat(quantity) * parseFloat(priceInUSD);
       setTotalAmount(totalPrice.toFixed(2));
-      const operationType = isBuying ? 'Compra' : 'Venta';
-      Alert.alert(
-        `Operación realizada: ${operationType} de ${selectedActionName} ${quantity} a ${selectedCurrency} ${price}`
-      );
+      const operationType = isBuying ? 'compra' : 'venta';
+
+      try {
+        const userToken = await AsyncStorage.getItem('userToken');
+        if (userToken) {
+          const decodedToken = jwtDecode(userToken);
+          const userId = decodedToken.usuario.id;
+
+          // Crear la transacción
+          const transaccionData = {
+            usuario_id: userId,
+            accion_id: selectedAction,
+            tipo: operationType,
+            cantidad: parseInt(quantity),
+            precio_unitario: parseFloat(priceInUSD), // Guardar el precio unitario en dólares
+            fecha_transaccion: new Date().toISOString(),
+          };
+          await axios.post(`${config.SERVER_IP}/transaccion`, transaccionData);
+
+          // Asociar o desasociar la acción con el usuario
+          if (isBuying) {
+            // Asociar acción a usuario
+            await axios.post(`${config.SERVER_IP}/usuarios/acciones`, {
+              usuario_id: userId,
+              accion_id: selectedAction,
+              cantidad: parseInt(quantity),
+            });
+          } else {
+            // Desasociar acción de usuario
+            await axios.delete(`${config.SERVER_IP}/usuarios/acciones/desasociar`, {
+              data: { usuario_id: userId, accion_id: selectedAction },
+            });
+          }
+
+          Alert.alert(`Operación realizada: ${operationType} de ${selectedActionName} ${quantity} a USD ${priceInUSD}`);
+        }
+      } catch (error) {
+        console.error('Error al realizar la operación:', error);
+        Alert.alert('Error al realizar la operación.');
+      }
+
       setQuantity('');
       setPrice('');
       setQuantityError('');
@@ -79,48 +185,51 @@ export default function TradeScreen() {
   };
 
   React.useEffect(() => {
-    if (selectedAction && quantity && !isNaN(parseFloat(quantity)) && parseFloat(quantity) > 0) {
+    if (selectedAction && selectedCurrency) {
+      // Encuentra la acción seleccionada para obtener su valor en USD
+      const accionSeleccionada = accionesDisponibles.find((accion) => accion.id === selectedAction);
+      if (accionSeleccionada) {
+        // Actualiza priceInUSD con el valor de la acción seleccionada
+        setPriceInUSD(accionSeleccionada.valor_dolares);
+        // Realiza la conversión de moneda
+        const priceConverted = convertPrice(accionSeleccionada.valor_dolares, selectedCurrency);
+        setPrice(priceConverted);
+      }
+    }
+  }, [selectedCurrency, selectedAction, accionesDisponibles]);
+
+  React.useEffect(() => {
+    // Cuando actualices priceInUSD, asegúrate de que sea un número
+    const updatePriceInUSD = (newPrice) => {
+      const numericPrice = parseFloat(newPrice);
+      if (!isNaN(numericPrice)) {
+        setPriceInUSD(numericPrice);
+      } else {
+        console.error('newPrice debe ser un número');
+        setPriceInUSD(0);
+      }
+    };
+  }, [selectedCurrency, priceInUSD]);
+
+  const validateForm = () => {
+    // Verifica que selectedAction, quantity y price tengan valores válidos
+    if (
+      selectedAction &&
+      !isNaN(parseFloat(quantity)) &&
+      parseFloat(quantity) > 0 &&
+      !isNaN(parseFloat(price)) &&
+      parseFloat(price) > 0
+    ) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
+  };
+
+  // Llama a validateForm cada vez que cambien los valores de selectedAction, quantity o price
+  React.useEffect(() => {
+    validateForm();
   }, [selectedAction, quantity, price]);
-
-  React.useEffect(() => {
-    if (userCountry in actionsByCountry) {
-      const action = actionsByCountry[userCountry].find((action) => action.id === selectedAction);
-      if (action) {
-        const priceUSD = parseFloat(action.price);
-        setSelectedActionName(action.name);
-        setPriceInUSD(priceUSD);
-        setPrice(priceUSD);
-        setCountryError('');
-      } else {
-        setSelectedActionName('');
-        setPrice('');
-      }
-    } else {
-      setCountryError('El país del usuario no está disponible.');
-      setSelectedActionName('');
-      setPrice('');
-    }
-  }, [selectedAction, userCountry]);
-
-  React.useEffect(() => {
-    if (userCountry in currenciesByCountry) {
-      setSelectedCurrency(currenciesByCountry[userCountry][0]);
-    } else {
-      setSelectedCurrency('');
-    }
-  }, [userCountry]);
-
-  React.useEffect(() => {
-    if (selectedCurrency === 'USD') {
-      setPrice(priceInUSD.toFixed(2));
-    } else {
-      setPrice(convertPrice(priceInUSD, selectedCurrency));
-    }
-  }, [selectedCurrency]);
 
   const navigation = useNavigation();
 
@@ -143,18 +252,6 @@ export default function TradeScreen() {
   const handleProfile = () => {
     navigation.navigate('Profile');
   };
-
-  const handleBuy = () => {
-    setSelectedAction('');
-    setIsBuying(true);
-  };
-
-  const handleSell = () => {
-    setSelectedAction('');
-    setIsBuying(false);
-  };
-
-  const actionsToDisplay = isBuying ? actionsByCountry[userCountry] : UserActions[userCountry];
 
   return (
     <View style={styles.container}>
@@ -183,13 +280,13 @@ export default function TradeScreen() {
         <View style={styles.operarOptions}>
           <TouchableOpacity
             style={[styles.operarOptionButton, isBuying ? styles.selectedOption : null]}
-            onPress={handleBuy}
+            onPress={() => handleBuySellToggle(true)}
           >
             <Text style={styles.operarSelectText}>Comprar</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.operarOptionButton, !isBuying ? styles.selectedOption : null]}
-            onPress={handleSell}
+            onPress={() => handleBuySellToggle(false)}
           >
             <Text style={styles.operarSelectText}>Vender</Text>
           </TouchableOpacity>
@@ -197,36 +294,53 @@ export default function TradeScreen() {
         <View style={styles.operarSelect}>
           <Text style={styles.operarTitle}>Seleccione una acción</Text>
           <ScrollView style={styles.actionList}>
-            {userCountry in actionsByCountry ? (
-              actionsToDisplay.map((action) => (
-                <TouchableOpacity
-                  key={action.id}
-                  style={[styles.operarSelectButton, selectedAction === action.id && styles.selected]}
-                  onPress={() => setSelectedAction(action.id)}
-                >
-                  <Text style={styles.operarSelectText}>{action.id}</Text>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text style={styles.errorText}>No hay acciones disponibles para el país del usuario.</Text>
-            )}
+            {isBuying
+              ? accionesDisponibles.map((accion, index) => (
+                  <TouchableOpacity
+                    key={accion.id ? accion.id.toString() : index.toString()} // Usa index si accion.id es undefined
+                    style={[styles.operarSelectButton, selectedAction === accion.id && styles.selected]}
+                    onPress={() => {
+                      setSelectedAction(accion.id);
+                      setSelectedActionName(accion.nombre);
+                      const priceConverted = convertPrice(accion.valor_dolares, selectedCurrency);
+                      setPrice(priceConverted);
+                    }}
+                  >
+                    <Text style={styles.operarSelectText}>{accion.nombre}</Text>
+                  </TouchableOpacity>
+                ))
+              : accionesDisponibles.map((accion, index) => (
+                  <TouchableOpacity
+                    key={accion.id ? accion.id.toString() : index.toString()} // Usa index si accion.id es undefined
+                    style={[styles.operarSelectButton, selectedAction === accion.id && styles.selected]}
+                    onPress={() => {
+                      setSelectedAction(accion.id);
+                      setSelectedActionName(accion.nombre);
+                      const priceConverted = convertPrice(accion.valor_dolares, selectedCurrency);
+                      setPrice(priceConverted);
+                    }}
+                  >
+                    <Text style={styles.operarSelectText}>{accion.nombre}</Text>
+                  </TouchableOpacity>
+                ))}
           </ScrollView>
         </View>
+
         <View style={styles.operarItem}>
           <View style={styles.operarLeft}>
             <Text style={styles.operarTitle}>Moneda</Text>
             <Text style={styles.operarDate}>Seleccione la moneda</Text>
           </View>
+
           <View style={styles.operarRight}>
             <ScrollView style={styles.actionList} horizontal>
-              {userCountry in currenciesByCountry ? (
-                currenciesByCountry[userCountry].map((currency) => (
+              {availableCurrencies.length > 0 ? (
+                availableCurrencies.map((currency, index) => (
                   <TouchableOpacity
-                    key={currency}
+                    key={index.toString()}
                     style={[
                       styles.operarSelectButton,
                       selectedCurrency === currency && styles.selected,
-                      !selectedAction && styles.disabledButton,
                       selectedAction && styles.enabledButton,
                     ]}
                     onPress={() => setSelectedCurrency(currency)}
