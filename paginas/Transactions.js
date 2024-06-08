@@ -1,11 +1,18 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { jwtDecode } from 'jwt-decode';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import config from '../logic/config';
 
 export default function Transactions() {
   const navigation = useNavigation();
+
+  const [transacciones, setTransacciones] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handHome = () => {
     navigation.navigate('Home');
@@ -26,6 +33,33 @@ export default function Transactions() {
     navigation.navigate('Profile');
   };
 
+  const fetchTransacciones = async () => {
+    try {
+      setLoading(true);
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (userToken) {
+        const decodedToken = jwtDecode(userToken);
+        const userId = decodedToken.usuario.id;
+
+        // Asegúrate de que la ruta coincida con tu endpoint de backend
+        const response = await axios.get(`${config.SERVER_IP}/transaccion`, {
+          params: { usuario_id: userId },
+        });
+        setTransacciones(response.data);
+      } else {
+        console.error('No se encontró el token del usuario.');
+      }
+    } catch (error) {
+      console.error('Error al obtener las transacciones:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransacciones();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -35,87 +69,27 @@ export default function Transactions() {
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.transactionsList}>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Compra de acciones</Text>
-            <Text style={styles.transactionDate}>10 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000,00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>1 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$300.000,00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Compra de acciones</Text>
-            <Text style={styles.transactionDate}>4 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$300.000.00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Compra de acciones</Text>
-            <Text style={styles.transactionDate}>3 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000,00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Compra de acciones</Text>
-            <Text style={styles.transactionDate}>2 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000,00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Compra de acciones</Text>
-            <Text style={styles.transactionDate}>8 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000,00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Compra de acciones</Text>
-            <Text style={styles.transactionDate}>10 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000,00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>12 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>+$500.000,00</Text>
-          </View>
-        </View>
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>Venta de acciones</Text>
-            <Text style={styles.transactionDate}>18 de abril, 2024</Text>
-          </View>
-          <View style={styles.transactionRight}>
-            <Text style={styles.transactionAmount}>-$500.000,00</Text>
-          </View>
-        </View>
+        {loading ? (
+          <ActivityIndicator size='large' color='#F0B90B' />
+        ) : (
+          transacciones.map((transaccion, index) => (
+            <View key={index} style={styles.transactionItem}>
+              <View style={styles.transactionLeft}>
+                <Text style={styles.transactionTitle}>
+                  {transaccion.tipo === 'compra' ? 'Compra' : 'Venta'} de acciones
+                </Text>
+                <Text style={styles.transactionDate}>
+                  {new Date(transaccion.fecha_transaccion).toLocaleDateString()}
+                </Text>
+              </View>
+              <View style={styles.transactionRight}>
+                <Text style={styles.transactionAmount}>
+                  {transaccion.tipo === 'compra' ? '-' : '+'}${transaccion.cantidad * transaccion.precio_unitario}
+                </Text>
+              </View>
+            </View>
+          ))
+        )}
       </ScrollView>
       <View style={styles.bottomMenu}>
         <TouchableOpacity style={styles.menuItem} onPress={handHome}>

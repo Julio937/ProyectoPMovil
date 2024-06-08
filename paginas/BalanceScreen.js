@@ -1,18 +1,18 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import React, { useContext, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { BalanceContext } from '../logic/Context';
+import config from '../logic/config';
 
 export default function BalanceScreen() {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false); // Simula el estado de carga de datos
-
-  const context = useContext(BalanceContext);
-
-  const balance = context?.balance;
-  const earnings = context?.earnings;
+  const [loading, setLoading] = useState(false);
+  const [balance, setBalance] = useState(0);
+  const [earnings, setEarnings] = useState(0);
 
   const handleNavigation = (screen) => {
     navigation.navigate(screen);
@@ -21,6 +21,30 @@ export default function BalanceScreen() {
   const handleProfile = () => {
     navigation.navigate('Profile');
   };
+
+  const fetchUserData = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (userToken) {
+        const decodedToken = jwtDecode(userToken);
+        const userId = decodedToken.usuario.id;
+
+        const balanceResponse = await axios.get(`${config.SERVER_IP}/usuarios/${userId}/balance`);
+        setBalance(balanceResponse.data.balance);
+
+        const earningsResponse = await axios.get(`${config.SERVER_IP}/usuarios/${userId}/earnings`);
+        setEarnings(earningsResponse.data.earnings);
+      } else {
+        console.error('No se encontró el token del usuario.');
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -38,11 +62,11 @@ export default function BalanceScreen() {
           <>
             <View style={styles.walletCard}>
               <Text style={styles.walletCardTitle}>Saldo disponible</Text>
-              <Text style={styles.walletInfoText}>${balance ? balance.toLocaleString() : '0'}</Text>
+              <Text style={styles.walletInfoText}>${balance.toLocaleString()}</Text>
             </View>
             <View style={styles.walletCard}>
               <Text style={styles.walletCardTitle}>Ganancias totales</Text>
-              <Text style={styles.walletInfoText}>${earnings ? earnings.toLocaleString() : '0'}</Text>
+              <Text style={styles.walletInfoText}>${earnings.toLocaleString()}</Text>
             </View>
           </>
         )}

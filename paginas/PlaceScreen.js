@@ -1,28 +1,45 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import config from '../logic/config';
 
 export default function CountryScreen() {
   const navigation = useNavigation();
+  const [paises, setPaises] = useState([]);
 
-  const handleGoBack = () => {
+  useEffect(() => {
+    // Obtener la lista de países desde el backend
+    axios
+      .get(`${config.SERVER_IP}/paises`)
+      .then((response) => {
+        setPaises(response.data);
+      })
+      .catch((error) => {
+        console.error('Hubo un error al obtener los países', error);
+      });
+  }, []);
+
+  const handleSelectCountry = (pais) => {
+    // Aquí puedes manejar la selección del país, por ejemplo, guardarlo en el estado global o en AsyncStorage
+    console.log('País seleccionado:', pais);
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>País</Text>
-      <TouchableOpacity style={styles.countryButton} onPress={handleGoBack}>
-        <Text style={styles.buttonCountryText}>Colombia</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.countryButton} onPress={handleGoBack}>
-        <Text style={styles.buttonCountryText}>Bolivia</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.countryButton} onPress={handleGoBack}>
-        <Text style={styles.buttonCountryText}>Mexico</Text>
-      </TouchableOpacity>
+      <FlatList
+        data={paises}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.countryButton} onPress={() => handleSelectCountry(item)}>
+            <Text style={styles.buttonCountryText}>{item.nombre}</Text>
+          </TouchableOpacity>
+        )}
+      />
       <View style={styles.form}>
-        <TouchableOpacity style={styles.goBackButton} onPress={handleGoBack}>
+        <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.goBack()}>
           <Text style={styles.buttonText}>Volver</Text>
         </TouchableOpacity>
       </View>

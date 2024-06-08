@@ -1,16 +1,19 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import React, { useContext } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { BalanceContext } from '../logic/Context';
+import config from '../logic/config';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const context = useContext(BalanceContext);
-
-  const balance = context?.balance;
-  const earnings = context?.earnings;
+  const [balance, setBalance] = useState(0);
+  const [earnings, setEarnings] = useState(0);
+  const [userId, setUserId] = useState(null);
+  const [accionesDisponibles, setAccionesDisponibles] = useState([]);
 
   const handBalance = () => {
     navigation.navigate('Balance');
@@ -24,18 +27,62 @@ export default function HomeScreen() {
   const handConfiguration = () => {
     navigation.navigate('Configuration');
   };
+  const fetchUserData = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (userToken) {
+        const decodedToken = jwtDecode(userToken);
+        setUserId(decodedToken.usuario.id);
+
+        const balanceResponse = await axios.get(`${config.SERVER_IP}/usuarios/${decodedToken.usuario.id}/balance`);
+        setBalance(balanceResponse.data.balance);
+
+        const earningsResponse = await axios.get(`${config.SERVER_IP}/usuarios/${decodedToken.usuario.id}/earnings`);
+        setEarnings(earningsResponse.data.earnings);
+      } else {
+        console.error('No se encontró el token del usuario.');
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchAccionesDisponibles = async () => {
+    try {
+      const response = await axios.get(`${config.SERVER_IP}/acciones?limit=5&order=desc`);
+      setAccionesDisponibles(response.data);
+    } catch (error) {
+      console.error('Error al obtener las acciones disponibles:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+    fetchAccionesDisponibles();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.marketOverview}>
-        <Text style={styles.sectionTitle}>Estado actual del mercado</Text>
-        <Text style={styles.marketOverviewText}>Dow Jones: 34,000</Text>
-        <Text style={styles.marketOverviewText}>S&P 500: 4,000</Text>
+        <Text style={styles.sectionTitle}>Acciones disponibles</Text>
+        {accionesDisponibles.slice(0, 5).map((accion, index) => (
+          <View key={index} style={styles.accionItem}>
+            <Text style={styles.accionText}>
+              {accion.nombre}: ${accion.valor_dolares}
+            </Text>
+          </View>
+        ))}
       </View>
 
       <View style={styles.walletInfo}>
         <Text style={styles.sectionTitle}>Balance de la cuenta</Text>
-        <Text style={styles.walletInfoText}>${balance ? balance.toLocaleString() : '0'}</Text>
+        <Text style={styles.walletInfoText}>${balance.toLocaleString()}</Text>
+        <Text style={styles.sectionTitle}>Ganancias</Text>
+        <Text style={styles.walletInfoText}>${earnings.toLocaleString()}</Text>
       </View>
 
       <View style={styles.bottomMenu}>
@@ -71,6 +118,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   marketOverview: {
+    marginTop: 20,
     flex: 1,
     justifyContent: 'center',
     width: '90%',
@@ -117,5 +165,16 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     marginTop: 5,
+  },
+  accionItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
+  },
+  accionText: {
+    color: 'white',
+    fontSize: 18,
   },
 });

@@ -1,9 +1,14 @@
+import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import config from '../logic/config';
 
 export default function RegisterScreen() {
   const navigation = useNavigation();
+
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [registerData, setRegisterData] = useState({
     name: '',
@@ -13,6 +18,19 @@ export default function RegisterScreen() {
     id_card: '',
     country: '',
   });
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    // Obtener la lista de países desde el backend
+    axios
+      .get(`${config.SERVER_IP}/paises`)
+      .then((response) => {
+        setCountries(response.data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener los países', error);
+      });
+  }, []);
 
   const validateEmail = (text) => {
     const emailRegex = /\S+@\S+\.\S+/;
@@ -28,16 +46,28 @@ export default function RegisterScreen() {
     validateEmail(registerData.email) &&
     registerData.country;
 
-  const handleRegister = () => {
-    console.log('Registro completado');
-    console.log('Nombre:', registerData.name);
-    console.log('Apellido:', registerData.lastName);
-    console.log('Correo Electrónico:', registerData.email);
-    console.log('Contraseña:', registerData.password);
-    console.log('Cédula:', registerData.id_card);
-    console.log('País:', registerData.country);
+  const handleRegister = async () => {
+    try {
+      const userData = {
+        nombre: registerData.name,
+        apellido: registerData.lastName,
+        correo: registerData.email,
+        contraseña: registerData.password,
+        cedula: registerData.id_card,
+        pais_id: registerData.country,
+      };
 
-    navigation.navigate('Home');
+      const response = await axios.post(`${config.SERVER_IP}/auth/registrar`, userData);
+      if (response.data && response.data.token) {
+        await AsyncStorage.setItem('userToken', response.data.token);
+        console.log('Registro exitoso:', response.data);
+        navigation.navigate('Home');
+      } else {
+        console.error('No se recibió un token del servidor');
+      }
+    } catch (error) {
+      setErrorMessage(error.response.data);
+    }
   };
 
   const handleGoToLogin = () => {
@@ -81,12 +111,15 @@ export default function RegisterScreen() {
           onChangeText={(text) => setRegisterData({ ...registerData, id_card: text })}
           keyboardType='numeric'
         />
-        <TextInput
-          style={styles.input}
-          placeholder='País'
-          value={registerData.country}
-          onChangeText={(text) => setRegisterData({ ...registerData, country: text })}
-        />
+        <Picker
+          selectedValue={registerData.country}
+          style={styles.picker}
+          onValueChange={(itemValue, itemIndex) => setRegisterData({ ...registerData, country: itemValue })}
+        >
+          {countries.map((country, index) => (
+            <Picker.Item key={index} label={country.nombre} value={country.id} />
+          ))}
+        </Picker>
       </View>
       <TouchableOpacity
         style={[styles.registerButton, !isRegisterEnabled && { opacity: 0.5 }]}
@@ -98,6 +131,7 @@ export default function RegisterScreen() {
       <TouchableOpacity style={styles.goBackButton} onPress={handleGoToLogin}>
         <Text style={styles.buttonText}>Volver al inicio de sesión</Text>
       </TouchableOpacity>
+      {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
     </View>
   );
 }
@@ -133,6 +167,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
+  picker: {
+    height: 50,
+    width: '100%',
+    color: 'white',
+    backgroundColor: '#333',
+    marginBottom: 10,
+  },
   goBackButton: {
     backgroundColor: '#555',
     padding: 15,
@@ -142,5 +183,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 16,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });
