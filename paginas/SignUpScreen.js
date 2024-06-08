@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -60,7 +61,6 @@ export default function RegisterScreen() {
       const response = await axios.post(`${config.SERVER_IP}/auth/registrar`, userData);
       if (response.data && response.data.token) {
         await AsyncStorage.setItem('userToken', response.data.token);
-        console.log('Registro exitoso:', response.data);
         navigation.navigate('Home');
       } else {
         console.error('No se recibió un token del servidor');
