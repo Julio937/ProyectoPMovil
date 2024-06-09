@@ -41,11 +41,11 @@ export default function Transactions() {
         const decodedToken = jwtDecode(userToken);
         const userId = decodedToken.usuario.id;
 
-        // Asegúrate de que la ruta coincida con tu endpoint de backend
-        const response = await axios.get(`${config.SERVER_IP}/transaccion`, {
-          params: { usuario_id: userId },
-        });
-        setTransacciones(response.data);
+        // Obtener todas las transacciones
+        const response = await axios.get(`${config.SERVER_IP}/transaccion`);
+        // Filtrar las transacciones para obtener solo las del usuario actual
+        const transaccionesDelUsuario = response.data.filter((transaccion) => transaccion.usuario_id === userId);
+        setTransacciones(transaccionesDelUsuario);
       } else {
         console.error('No se encontró el token del usuario.');
       }

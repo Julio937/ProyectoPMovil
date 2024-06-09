@@ -32,12 +32,12 @@ export default function HomeScreen() {
       const userToken = await AsyncStorage.getItem('userToken');
       if (userToken) {
         const decodedToken = jwtDecode(userToken);
-        setUserId(decodedToken.usuario.id);
+        const userId = decodedToken.usuario.id;
 
-        const balanceResponse = await axios.get(`${config.SERVER_IP}/usuarios/${decodedToken.usuario.id}/balance`);
+        const balanceResponse = await axios.get(`${config.SERVER_IP}/usuarios/${userId}/balance`);
         setBalance(balanceResponse.data.balance);
 
-        const earningsResponse = await axios.get(`${config.SERVER_IP}/usuarios/${decodedToken.usuario.id}/earnings`);
+        const earningsResponse = await axios.get(`${config.SERVER_IP}/usuarios/${userId}/earnings`);
         setEarnings(earningsResponse.data.earnings);
       } else {
         console.error('No se encontró el token del usuario.');
@@ -46,11 +46,6 @@ export default function HomeScreen() {
       console.error('Error al obtener los datos del usuario:', error);
     }
   };
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
   const fetchAccionesDisponibles = async () => {
     try {
       const response = await axios.get(`${config.SERVER_IP}/acciones?limit=5&order=desc`);
